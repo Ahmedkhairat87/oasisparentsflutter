@@ -1,0 +1,17 @@
+# flutter_native_splash-production.yaml
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/splash4x.png
+  branding:
+  branding_bottom_padding: 24
+  color_dark: "#121212"
+  image_dark: assets/images/splash4x.png
+  branding_dark:
+
+  android_12:
+    image: assets/images/splash4x.png
+    icon_background_color: "#ffffff"
+    image_dark: assets/images/splash4x.png
+    icon_background_color_dark: "#121212"
+
+  web: false
