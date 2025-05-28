@@ -159,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     //==>  Logo Starts Here <==//
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Image.asset(AssetsManager.logo, width: 200.w)],
+                      children: [Image.asset(AssetsManager.logo, width: 150.w)],
                     ),
                     //==>  Logo Ends Here <==//
                     SizedBox(height: 30.h),
@@ -170,16 +170,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           "welcome".tr(),
                           style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.textMain,
-                            fontFamily: 'Roboto',
+                            fontSize: 35.sp,
+                            //fontWeight: FontWeight.normal,
+                            color: Theme.of(context).colorScheme.textMainBlack,
+                           //fontFamily: 'helvetica',
+                            //fontStyle: 'italic',
                           ),
                         ),
                       ],
                     ),
                     //==> Welcome Text Ends Here <==//
-                    SizedBox(height: 15,),
+                    SizedBox(height: 0,),
                     //==> Sign In Text Starts Here <==//
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -187,10 +188,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           "sign_in".tr(),
                           style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.textMain,
-                            fontFamily: 'Roboto',
+                            fontSize: 15.sp,
+                           //fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.textMainBlack,
+                            //fontFamily: 'Roboto',
                           ),
                         ),
                       ],
@@ -292,7 +293,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                       color:
                                                           Theme.of(context)
                                                               .colorScheme
-                                                              .textMain,
+                                                              .textMainBlack,
                                                     ),
                                                   ),
                                                   IconButton(
@@ -347,7 +348,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     fontWeight: FontWeight.bold,
                                                     color: Theme.of(context)
                                                         .colorScheme
-                                                        .textMain,
+                                                        .textMainBlack,
                                                   ),
                                                 ),
                                               ),
@@ -380,11 +381,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                                       color:
                                                           Theme.of(context)
                                                               .colorScheme
-                                                              .textMain,
+                                                              .textMainBlack,
                                                       fontSize: 20.sp,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontFamily: 'Roboto',
+                                                     // fontFamily: 'Roboto',
                                                     ),
                                                   ),
                                                 ),
@@ -401,8 +402,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.bold,
 
-                                color: Theme.of(context).colorScheme.textMain,
-                                fontFamily: 'Roboto',
+                                color: Theme.of(context).colorScheme.textMainBlack,
                               ),
                             ),
                           ),
@@ -420,7 +420,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                Theme.of(context).colorScheme.elements,
+                                Theme.of(context).colorScheme.btnBackMainColor,
                             minimumSize: Size(330.w, 40.h),
                           ),
                           onPressed: () {
@@ -429,10 +429,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                             "login".tr(),
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.textMain,
+                              color: Theme.of(context).colorScheme.textMainWhite,
                               fontSize: 20.sp,
                               fontWeight: FontWeight.bold,
-                              fontFamily: 'Roboto',
+                             // fontFamily: 'Roboto',
                             ),
                           ),
                         ),

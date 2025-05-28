@@ -5,13 +5,21 @@ extension AppColors on ColorScheme {
   // == Light/Dark shared logic == //
   bool get isLight => brightness == Brightness.light;
 
+  Color get btnBackMainColor => isLight
+      ? ColorsManager.lighBlueMainBackColor
+      : ColorsManager.darkBlueMainBackColor;
+
   Color get backgroundMain => isLight
       ? ColorsManager.lightBackground
       : ColorsManager.darkBackground;
 
-  Color get textMain => isLight
-      ? ColorsManager.lightText
-      : ColorsManager.darkText;
+  Color get textMainWhite => isLight
+      ? ColorsManager.lightTextWhite
+      : ColorsManager.darkTextBlack;
+
+  Color get textMainBlack => isLight
+      ? ColorsManager.darkTextWhite
+      : ColorsManager.darkTextBlack;
 
   Color get hintText => isLight
       ? ColorsManager.lightHintText

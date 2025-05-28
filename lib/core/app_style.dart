@@ -5,7 +5,7 @@ import 'colors_Manager.dart';
 class AppStyle{
   //==> Light Theme Starts Here <==//
   static ThemeData lightMode = ThemeData(
-    fontFamily: 'Roboto',
+    fontFamily: 'helvetica',
     cardTheme: const CardTheme(surfaceTintColor: Colors.transparent),
     dialogTheme: const DialogTheme(surfaceTintColor: Colors.transparent),
     useMaterial3: true,
