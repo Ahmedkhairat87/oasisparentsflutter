@@ -755,7 +755,7 @@ class _HomeDrawerState extends State<HomeDrawer>
   }
 
   /// Build Each Drawer Item
-  Widget _buildItem(_NavigationItem data, NavDrawerState state) =>
+  Widget _buildItem(_NavigationItem data, NavDrawerState state  ) =>
       _makeListItem(data, state);
 
 
