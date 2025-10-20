@@ -6,8 +6,8 @@ class AppStyle{
   //==> Light Theme Starts Here <==//
   static ThemeData lightMode = ThemeData(
     fontFamily: 'helvetica',
-    cardTheme: const CardTheme(surfaceTintColor: Colors.transparent),
-    dialogTheme: const DialogTheme(surfaceTintColor: Colors.transparent),
+    cardTheme: const CardThemeData(surfaceTintColor: Colors.transparent),
+    dialogTheme: const DialogThemeData(surfaceTintColor: Colors.transparent),
     useMaterial3: true,
     applyElevationOverlayColor: false,
     brightness: Brightness.light,
@@ -33,8 +33,8 @@ class AppStyle{
   //==> Dark Theme Starts Here <==//
   static ThemeData darkMode = ThemeData(
     fontFamily: 'Roboto',
-    cardTheme: const CardTheme(surfaceTintColor: Colors.transparent),
-    dialogTheme: const DialogTheme(surfaceTintColor: Colors.transparent),
+    cardTheme: const CardThemeData(surfaceTintColor: Colors.transparent),
+    dialogTheme: const DialogThemeData(surfaceTintColor: Colors.transparent),
     useMaterial3: true,
     applyElevationOverlayColor: false,
     brightness: Brightness.dark,
