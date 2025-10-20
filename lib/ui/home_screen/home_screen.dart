@@ -1,7 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:oasisparents/ui/home_screen/widgets/drawer_widget.dart';
 import 'package:oasisparents/ui/home_screen/widgets/home_drawer.dart';
+
+import '../../bloc/nav_drawer_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home';
@@ -9,26 +13,28 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: HomeDrawer(),
-      extendBodyBehindAppBar: true, // ✅ Allows content behind AppBar
-      appBar: AppBar(
-        backgroundColor: Colors.white.withOpacity(0.2), // ✅ Semi-transparent
-        elevation: 0,
-        title: const Text(
-          'Home Screen',
-          style: TextStyle(color: Colors.black),
-        ),
-        centerTitle: true,
-        flexibleSpace: ClipRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10), // ✅ Blur effect
-            child: Container(
-              color: Colors.transparent,
-            ),
-          ),
-        ),
-      ),
+    return BlocProvider(
+        create: (_) => NavDrawerBloc(),
+    child: Scaffold(
+    drawer: HomeDrawer(), // ✅ now it has access to the bloc
+    extendBodyBehindAppBar: true,
+    appBar: AppBar(
+    backgroundColor: Colors.white.withOpacity(0.2),
+    elevation: 0,
+    title: const Text(
+    'Home Screen',
+    style: TextStyle(color: Colors.black),
+    ),
+    centerTitle: true,
+    flexibleSpace: ClipRect(
+    child: BackdropFilter(
+    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+    child: Container(
+    color: Colors.transparent,
+    ),
+    ),
+    ),
+    ),
       body: Stack(
         children: [
           // ✅ Your fancy background: bubbles/gradients
@@ -100,7 +106,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 
 }

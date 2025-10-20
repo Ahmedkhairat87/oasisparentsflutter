@@ -13,7 +13,7 @@ class PaymentInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: HomeDrawer(),
+      //drawer: HomeDrawer(),
       extendBodyBehindAppBar: true, // ✅ Allows content behind AppBar
       appBar: AppBar(
         backgroundColor: Colors.white.withOpacity(0.2), // ✅ Semi-transparent
@@ -87,7 +87,7 @@ class PaymentInformation extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.textMain,
+                    color: Theme.of(context).colorScheme.textMainBlack,
                     fontFamily: 'Roboto',
                   ),
                 ),
@@ -138,7 +138,7 @@ class PaymentInformation extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.textMain,
+                      color: Theme.of(context).colorScheme.textMainBlack,
                       fontFamily: 'Roboto',
                     ),
                     ),

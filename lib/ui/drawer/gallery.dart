@@ -11,7 +11,7 @@ class Gallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: HomeDrawer(),
+      //drawer: HomeDrawer(),
       extendBodyBehindAppBar: true, // ✅ Allows content behind AppBar
       appBar: AppBar(
         backgroundColor: Colors.white.withOpacity(0.2), // ✅ Semi-transparent

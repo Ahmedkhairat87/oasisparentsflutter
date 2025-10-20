@@ -8,7 +8,8 @@ plugins {
 android {
     namespace = "oasisdemaadi.com.oasisparents"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "29.0.13113456"
+    ndkVersion = "27.0.12077973"
+   // ndkVersion = "29.0.13113456"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -28,6 +29,10 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        multiDexEnabled = true
+        // Disable Impeller
+        resValue(type = "string", name = "flutter.renderer", value = "skia")
     }
 
     buildTypes {
