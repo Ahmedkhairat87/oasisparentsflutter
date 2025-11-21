@@ -19,7 +19,6 @@ import '../bloc/nav_drawer_state.dart';
 // import '../widget/info_builder.dart';
 import 'package:iconly/iconly.dart';
 
-import '../ui/drawer/setting_view.dart';
 import 'info_builder.dart';
 
 

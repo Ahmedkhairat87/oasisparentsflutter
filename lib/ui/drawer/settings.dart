@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oasisparents/core/reusable_components/app_colors_extension.dart';
-import 'package:oasisparents/ui/home_screen/widgets/home_drawer.dart';
 import '../../core/assets_manager.dart';
 import '../../core/strings_manager.dart';
 

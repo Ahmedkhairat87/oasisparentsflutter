@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:oasisparents/ui/home_screen/widgets/home_drawer.dart';
 
 class Gallery extends StatelessWidget {
   static const routeName = '/gallery';

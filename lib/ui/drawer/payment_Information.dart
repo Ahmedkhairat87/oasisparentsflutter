@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oasisparents/core/reusable_components/app_colors_extension.dart';
 
-import '../home_screen/widgets/home_drawer.dart';
 
 class PaymentInformation extends StatelessWidget {
   static const routeName = '/paymentInformation';

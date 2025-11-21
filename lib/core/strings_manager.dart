@@ -35,4 +35,16 @@ abstract class StringsManager {
   static String extras= "extras";
   static String canteen= "canteen";
   static String class_photo= "class_photo";
+
+
+
+//Error messages
+  static String networkError = "networkError";
+  static String loginError = "loginError";
+  static String aError = "networkError";
+  static String bError = "networkError";
+  static String cError = "networkError";
+  static String dError = "networkError";
+  static String eError = "networkError";
+
 }

@@ -45,7 +45,11 @@ dependencies:
   iconly: ^1.0.1
   equatable: ^2.0.5
   http: ^1.4.0
+  shared_preferences: ^2.5.3
+  fluttertoast: ^8.2.4
 
+
+  intl: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

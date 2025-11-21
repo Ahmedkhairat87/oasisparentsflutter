@@ -2,32 +2,19 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iconly/iconly.dart';
-import 'package:oasisparents/core/reusable_components/app_colors_extension.dart';
+import 'package:oasisparents/core/colors_Manager.dart';
 import 'package:oasisparents/core/strings_manager.dart';
-import 'package:oasisparents/ui/home_screen/home_screen.dart';
 
 import '../../../bloc/drawer_event.dart';
 import '../../../bloc/nav_drawer_bloc.dart';
 import '../../../bloc/nav_drawer_state.dart';
-import '../../drawer/about_us.dart';
-import '../../drawer/appointments.dart';
-import '../../drawer/bus_registeration.dart';
-import '../../drawer/canteen_charge.dart';
-import '../../drawer/gallery.dart';
-import '../../drawer/messages.dart';
-import '../../drawer/newsletter.dart';
-import '../../drawer/payment_Information.dart';
-import '../../drawer/policies.dart';
-import '../../drawer/settings.dart';
 
 class _NavigationItem {
   final NavItem item;
-  final String title;
-  //final IconData icon;
   final String imagePath;
-  _NavigationItem(this.item, this.title, this.imagePath);
+  _NavigationItem(this.item, this.imagePath);
 }
+
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer({super.key});
 
@@ -35,820 +22,425 @@ class HomeDrawer extends StatefulWidget {
   State<HomeDrawer> createState() => _HomeDrawerState();
 }
 
-
-class _HomeDrawerState extends State<HomeDrawer>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    )..forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+class _HomeDrawerState extends State<HomeDrawer> {
   final List<_NavigationItem> _listItems = [
     _NavigationItem(
       NavItem.homeView,
-      "Messages",
       "assets/images/side-menu-items/MessagesEN.png",
     ),
     _NavigationItem(
       NavItem.appointmentsView,
-      "Appointments",
       "assets/images/side-menu-items/AppointmentEN.png",
     ),
     _NavigationItem(
       NavItem.busRegView,
-      "Orders",
       "assets/images/side-menu-items/NewsletterEN.png",
     ),
     _NavigationItem(
       NavItem.canteenChargeView,
-      "Cart",
-      "assets/images/side-menu-items/profileEN.png",
-    ),
-    _NavigationItem(
-      NavItem.homeView,
-      "Messages",
-      "assets/images/side-menu-items/MessagesEN.png",
-    ),
-    _NavigationItem(
-      NavItem.appointmentsView,
-      "Appointments",
-      "assets/images/side-menu-items/AppointmentEN.png",
-    ),
-    _NavigationItem(
-      NavItem.busRegView,
-      "Orders",
-      "assets/images/side-menu-items/NewsletterEN.png",
-    ),
-    _NavigationItem(
-      NavItem.canteenChargeView,
-      "Cart",
       "assets/images/side-menu-items/profileEN.png",
     ),
   ];
 
-
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final isLight = scheme.brightness == Brightness.light;
+
+    // joyful palette
+    final Color primaryBlue = isLight
+        ? ColorsManager.primaryGradientStart
+        : ColorsManager.primaryGradientStartDark;
+    final Color secondaryBlue = isLight
+        ? ColorsManager.primaryGradientEnd
+        : ColorsManager.primaryGradientEndDark;
+
+    final Color accentMint = ColorsManager.accentMint;
+    final Color accentSky = ColorsManager.accentSky;
+    final Color accentSun = ColorsManager.accentSun;
+    final Color accentPurple = ColorsManager.accentPurple;
+
     return Drawer(
-      child: Stack(
-        children: [
-          // Gradient background
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Theme.of(context).colorScheme.bubbleMedium.withOpacity(0.3),
-                  Theme.of(context).colorScheme.modeGradient.withOpacity(0.1),
-                ],
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              primaryBlue.withOpacity(0.10),
+              accentMint.withOpacity(0.12),
+              accentSun.withOpacity(0.10),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Column(
+          children: [
+            // Animated multicolor header
+            _buildHeader(
+              context,
+              primaryBlue: primaryBlue,
+              secondaryBlue: secondaryBlue,
+              accentSky: accentSky,
+            ),
+
+            // QUICK ACTIONS: Home + Logout (in a rounded colorful strip)
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.85),
+                  borderRadius: BorderRadius.circular(18.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: primaryBlue.withOpacity(0.12),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ListTile(
+                        dense: true,
+                        leading: Icon(
+                          Icons.home_rounded,
+                          color: accentSky,
+                        ),
+                        title: Text(
+                          'Home',
+                          style: TextStyle(
+                            color: scheme.onSurface.withOpacity(0.9),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _handleItemClick(context, NavItem.homeView);
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: ListTile(
+                        dense: true,
+                        leading: Icon(
+                          Icons.logout_rounded,
+                          color: accentSun,
+                        ),
+                        title: Text(
+                          'Logout',
+                          style: TextStyle(
+                            color: scheme.onSurface.withOpacity(0.9),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                        onTap: () {
+                          // TODO: add logout logic if needed
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          // Top-left animated bubble
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return Positioned(
-                top: -50 + (10 * (1 - _controller.value)),
-                left: -50 + (10 * (1 - _controller.value)),
-                child: Opacity(
-                  opacity: _controller.value,
-                  child: Transform.scale(
-                    scale: 0.8 + 0.2 * _controller.value,
-                    child: Container(
-                      width: 150,
-                      height: 150,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.bubbleMedium.withOpacity(0.3),
-                      ),
+            // SETTINGS
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.symmetric(horizontal: 4.w),
+                leading: Container(
+                  width: 32.w,
+                  height: 32.w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [
+                        accentPurple,
+                        accentSky,
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
                   ),
-                ),
-              );
-            },
-          ),
-
-          // Bottom-right animated bubble
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return Positioned(
-                bottom: -60 + (10 * (1 - _controller.value)),
-                right: -60 + (10 * (1 - _controller.value)),
-                child: Opacity(
-                  opacity: _controller.value,
-                  child: Transform.scale(
-                    scale: 0.8 + 0.2 * _controller.value,
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.bubbleLarge.withOpacity(0.3),
-                      ),
-                    ),
+                  child: const Icon(
+                    Icons.settings_rounded,
+                    color: Colors.white,
+                    size: 18,
                   ),
                 ),
-              );
-            },
-          ),
-
-          // Drawer content
-
-          Column(
-            children: [
-              DrawerHeader(
-                decoration: const BoxDecoration(color: Colors.transparent),
-                child: Text(
-                  'Hello!',
+                title: Text(
+                  StringsManager.settings.tr(),
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.textMainBlack,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                    color: scheme.onSurface.withOpacity(0.9),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14.sp,
                   ),
                 ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: ListTile(
-                      leading: Icon(Icons.home),
-                      title: Text('Home'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        //Navigator.pushNamed(context, HomeScreen.routeName);
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: ListTile(
-                      leading: Icon(Icons.logout),
-                      title: Text('Logout'),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              ListTile(
-                leading: Icon(Icons.settings),
-                title: Text(StringsManager.settings.tr()),
                 onTap: () {
                   Navigator.pop(context);
-                  //Navigator.pushNamed(context, Settings.routeName);
+                  // TODO: navigate to settings if available
                 },
               ),
-              Expanded(
-                child: GridView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: _listItems.length,
-                  //scrollDirection: Axis.vertical,
+            ),
 
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) =>
-                      BlocBuilder<NavDrawerBloc, NavDrawerState>(
-                        builder: (BuildContext context, NavDrawerState state) =>
-                            _buildItem(_listItems[index], state),
-                      ), gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,),
+            SizedBox(height: 4.h),
+
+            // MAIN NAV GRID (image-based) with joyful cards + stagger animation
+            Expanded(
+              child: GridView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                itemCount: _listItems.length,
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 1.2,
                 ),
+                itemBuilder: (BuildContext context, int index) {
+                  final item = _listItems[index];
+                  return BlocBuilder<NavDrawerBloc, NavDrawerState>(
+                    builder: (context, state) => _drawerItemCard(
+                      item,
+                      state,
+                      context,
+                      index: index,
+                      primaryBlue: primaryBlue,
+                      accentMint: accentMint,
+                      accentSun: accentSun,
+                      accentPurple: accentPurple,
+                    ),
+                  );
+                },
               ),
-
-            ],
-          )
-
-          // ListView(
-          //   padding: EdgeInsets.zero,
-          //   children: [
-          //
-          //
-          //
-          //     // Column(
-          //     //   children: [
-          //     //     Row(
-          //     //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //     //       children: [
-          //     //         //messageBTN Starts Here
-          //     //         InkWell(
-          //     //           onTap: () {
-          //     //             //Navigator.pushNamed(context, Messages.routeName);
-          //     //           },
-          //     //           child: Padding(
-          //     //             padding: const EdgeInsets.all(8.0),
-          //     //             child: Container(
-          //     //               width: 100.w,
-          //     //               height: 100.h,
-          //     //               decoration: BoxDecoration(
-          //     //                 shape: BoxShape.rectangle,
-          //     //                 color: Colors.greenAccent.withOpacity(0.5),
-          //     //                 borderRadius: BorderRadius.all(Radius.circular(25)),
-          //     //               ),
-          //     //               child: Column(
-          //     //                 mainAxisAlignment: MainAxisAlignment.center,
-          //     //                 children: [
-          //     //                   Container(
-          //     //                     width: 50.w,
-          //     //                     height: 50.h,
-          //     //                     decoration: BoxDecoration(
-          //     //                       shape: BoxShape.circle,
-          //     //                       color: Colors.greenAccent,
-          //     //                     ),
-          //     //                     child: Icon(Icons.message,
-          //     //                     size:35.sp,
-          //     //                     ),
-          //     //                   ),
-          //     //                   Text(
-          //     //                     StringsManager.messages.tr(),
-          //     //                     style: TextStyle(
-          //     //                       fontSize: 13.sp,
-          //     //                       fontWeight: FontWeight.bold,
-          //     //                       color: Theme.of(context).colorScheme.textMainBlack,
-          //     //                       fontFamily: 'Roboto',
-          //     //                     ),
-          //     //                   ),
-          //     //                 ],
-          //     //               ),
-          //     //             ),
-          //     //           ),
-          //     //         ),
-          //     //         //messageBTN Ends Here
-          //     //
-          //     //         //NewsLetterBTN Starts Here
-          //     //         InkWell(
-          //     //           onTap: () {
-          //     //            // Navigator.pushNamed(context, Newsletter.routeName);
-          //     //           },
-          //     //           child: Padding(
-          //     //             padding: const EdgeInsets.all(8.0),
-          //     //             child: Container(
-          //     //               width: 100.w,
-          //     //               height: 100.h,
-          //     //               decoration: BoxDecoration(
-          //     //                 shape: BoxShape.rectangle,
-          //     //                 color: Colors.brown.withOpacity(0.5),
-          //     //                 borderRadius: BorderRadius.all(Radius.circular(25)),
-          //     //               ),
-          //     //               child: Column(
-          //     //                 mainAxisAlignment: MainAxisAlignment.center,
-          //     //                 children: [
-          //     //                   Container(
-          //     //                     width: 50.w,
-          //     //                     height: 50.h,
-          //     //                     decoration: BoxDecoration(
-          //     //                       shape: BoxShape.circle,
-          //     //                       color: Colors.brown,
-          //     //                     ),
-          //     //                     child: Icon(Icons.newspaper,
-          //     //                       size:35.sp,
-          //     //                     ),
-          //     //                   ),
-          //     //                   Text(
-          //     //                     StringsManager.newsLetter.tr(),
-          //     //                     style: TextStyle(
-          //     //                       fontSize: 13.sp,
-          //     //                       fontWeight: FontWeight.bold,
-          //     //                       color: Theme.of(context).colorScheme.textMainBlack,
-          //     //                       fontFamily: 'Roboto',
-          //     //                     ),
-          //     //                   ),
-          //     //                 ],
-          //     //               ),
-          //     //             ),
-          //     //           ),
-          //     //         ),
-          //     //         //NewsLetterBTN Ends Here
-          //     //       ],
-          //     //     ),
-          //     //     Row(
-          //     //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //     //       children: [
-          //     //         //Payment Information BTN Starts Here
-          //     //         InkWell(
-          //     //           onTap: () {
-          //     //           // Navigator.pushNamed(context, PaymentInformation.routeName);
-          //     //           },
-          //     //           child: Padding(
-          //     //             padding: const EdgeInsets.all(8.0),
-          //     //             child: Container(
-          //     //               width: 100.w,
-          //     //               height: 100.h,
-          //     //               decoration: BoxDecoration(
-          //     //                 shape: BoxShape.rectangle,
-          //     //                 color: Colors.cyan.withOpacity(0.5),
-          //     //                 borderRadius: BorderRadius.all(Radius.circular(25)),
-          //     //               ),
-          //     //               child: Column(
-          //     //                 mainAxisAlignment: MainAxisAlignment.center,
-          //     //                 children: [
-          //     //                   Container(
-          //     //                     width: 50.w,
-          //     //                     height: 50.h,
-          //     //                     decoration: BoxDecoration(
-          //     //                       shape: BoxShape.circle,
-          //     //                       color: Colors.cyan,
-          //     //                     ),
-          //     //                     child: Icon(Icons.payment,
-          //     //                       size:35.sp,
-          //     //                     ),
-          //     //                   ),
-          //     //                   Text(
-          //     //                     StringsManager.paymentInfo.tr(),
-          //     //                     style: TextStyle(
-          //     //                       fontSize: 13.sp,
-          //     //                       fontWeight: FontWeight.bold,
-          //     //                       color: Theme.of(context).colorScheme.textMainBlack,
-          //     //                       fontFamily: 'Roboto',
-          //     //                     ),
-          //     //                   ),
-          //     //                 ],
-          //     //               ),
-          //     //             ),
-          //     //           ),
-          //     //         ),
-          //     //         //Payment Information BTN Ends Here
-          //     //
-          //     //         //Canteen Charge BTN Starts Here
-          //     //         InkWell(
-          //     //           onTap: () {
-          //     //             //Navigator.pushNamed(context, CanteenCharge.routeName);
-          //     //           },
-          //     //           child: Padding(
-          //     //             padding: const EdgeInsets.all(8.0),
-          //     //             child: Container(
-          //     //               width: 100.w,
-          //     //               height: 100.h,
-          //     //               decoration: BoxDecoration(
-          //     //                 shape: BoxShape.rectangle,
-          //     //                 color: Colors.redAccent.withOpacity(0.5),
-          //     //                 borderRadius: BorderRadius.all(Radius.circular(25)),
-          //     //               ),
-          //     //               child: Column(
-          //     //                 mainAxisAlignment: MainAxisAlignment.center,
-          //     //                 children: [
-          //     //                   Container(
-          //     //                     width: 50.w,
-          //     //                     height: 50.h,
-          //     //                     decoration: BoxDecoration(
-          //     //                       shape: BoxShape.circle,
-          //     //                       color: Colors.redAccent,
-          //     //                     ),
-          //     //                     child: Icon(Icons.restaurant_menu_rounded,
-          //     //                       size:35.sp,
-          //     //                     ),
-          //     //                   ),
-          //     //                   Text(
-          //     //                     StringsManager.canteenCharge.tr(),
-          //     //                     style: TextStyle(
-          //     //                       fontSize: 13.sp,
-          //     //                       fontWeight: FontWeight.bold,
-          //     //                       color: Theme.of(context).colorScheme.textMainBlack,
-          //     //                       fontFamily: 'Roboto',
-          //     //                     ),
-          //     //                   ),
-          //     //                 ],
-          //     //               ),
-          //     //             ),
-          //     //           ),
-          //     //         ),
-          //     //         //Canteen Charge BTN Ends Here
-          //     //       ],
-          //     //     ),
-          //     //     Row(
-          //     //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //     //       children: [
-          //     //
-          //     //         //Appointment BTN Starts Here
-          //     //         InkWell(
-          //     //           onTap: () {
-          //     //            // Navigator.pushNamed(context, Appointments.routeName);
-          //     //           },
-          //     //           child: Padding(
-          //     //             padding: const EdgeInsets.all(8.0),
-          //     //             child: Container(
-          //     //               width: 100.w,
-          //     //               height: 100.h,
-          //     //               decoration: BoxDecoration(
-          //     //                 shape: BoxShape.rectangle,
-          //     //                 color: Colors.purpleAccent.withOpacity(0.5),
-          //     //                 borderRadius: BorderRadius.all(Radius.circular(25)),
-          //     //               ),
-          //     //               child: Column(
-          //     //                 mainAxisAlignment: MainAxisAlignment.center,
-          //     //                 children: [
-          //     //                   Container(
-          //     //                     width: 50.w,
-          //     //                     height: 50.h,
-          //     //                     decoration: BoxDecoration(
-          //     //                       shape: BoxShape.circle,
-          //     //                       color: Colors.purpleAccent,
-          //     //                     ),
-          //     //                     child: Icon(Icons.edit_calendar,
-          //     //                       size:35.sp,
-          //     //                     ),
-          //     //                   ),
-          //     //                   Text(
-          //     //                     StringsManager.appointment.tr(),
-          //     //                     style: TextStyle(
-          //     //                       fontSize: 13.sp,
-          //     //                       fontWeight: FontWeight.bold,
-          //     //                       color: Theme.of(context).colorScheme.textMainBlack,
-          //     //                       fontFamily: 'Roboto',
-          //     //                     ),
-          //     //                   ),
-          //     //                 ],
-          //     //               ),
-          //     //             ),
-          //     //           ),
-          //     //         ),
-          //     //         //Appointment BTN Ends Here
-          //     //         //Gallery BTN Starts Here
-          //     //         InkWell(
-          //     //           onTap: () {
-          //     //             //Navigator.pushNamed(context, Gallery.routeName);
-          //     //           },
-          //     //           child: Padding(
-          //     //             padding: const EdgeInsets.all(8.0),
-          //     //             child: Container(
-          //     //               width: 100.w,
-          //     //               height: 100.h,
-          //     //               decoration: BoxDecoration(
-          //     //                 shape: BoxShape.rectangle,
-          //     //                 color: Colors.blue.withOpacity(0.5),
-          //     //                 borderRadius: BorderRadius.all(Radius.circular(25)),
-          //     //               ),
-          //     //               child: Column(
-          //     //                 mainAxisAlignment: MainAxisAlignment.center,
-          //     //                 children: [
-          //     //                   Container(
-          //     //                     width: 50.w,
-          //     //                     height: 50.h,
-          //     //                     decoration: BoxDecoration(
-          //     //                       shape: BoxShape.circle,
-          //     //                       color: Colors.blue,
-          //     //                     ),
-          //     //                     child: Icon(Icons.photo_camera_back,
-          //     //                       size:35.sp,
-          //     //                     ),
-          //     //                   ),
-          //     //                   Text(
-          //     //                     StringsManager.gallery.tr(),
-          //     //                     style: TextStyle(
-          //     //                       fontSize: 13.sp,
-          //     //                       fontWeight: FontWeight.bold,
-          //     //                       color: Theme.of(context).colorScheme.textMainBlack,
-          //     //                       fontFamily: 'Roboto',
-          //     //                     ),
-          //     //                   ),
-          //     //                 ],
-          //     //               ),
-          //     //             ),
-          //     //           ),
-          //     //         ),
-          //     //         //Gallery BTN Ends Here
-          //     //       ],
-          //     //     ),
-          //     //     Row(
-          //     //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //     //       children: [
-          //     //         //Bus Registration BTN Starts Here
-          //     //         InkWell(
-          //     //           onTap: () {
-          //     //            // Navigator.pushNamed(context, BusRegisteration.routeName);
-          //     //           },
-          //     //           child: Padding(
-          //     //             padding: const EdgeInsets.all(8.0),
-          //     //             child: Container(
-          //     //               width: 100.w,
-          //     //               height: 100.h,
-          //     //               decoration: BoxDecoration(
-          //     //                 shape: BoxShape.rectangle,
-          //     //                 color: Colors.grey.withOpacity(0.5),
-          //     //                 borderRadius: BorderRadius.all(Radius.circular(25)),
-          //     //               ),
-          //     //               child: Column(
-          //     //                 mainAxisAlignment: MainAxisAlignment.center,
-          //     //                 children: [
-          //     //                   Container(
-          //     //                     width: 50.w,
-          //     //                     height: 50.h,
-          //     //                     decoration: BoxDecoration(
-          //     //                       shape: BoxShape.circle,
-          //     //                       color: Colors.grey,
-          //     //                     ),
-          //     //                     child: Icon(Icons.bus_alert,
-          //     //                       size:35.sp,
-          //     //                     ),
-          //     //                   ),
-          //     //                   Text(
-          //     //                     StringsManager.busRegister.tr(),
-          //     //                     style: TextStyle(
-          //     //                       fontSize: 13.sp,
-          //     //                       fontWeight: FontWeight.bold,
-          //     //                       color: Theme.of(context).colorScheme.textMainBlack,
-          //     //                       fontFamily: 'Roboto',
-          //     //                     ),
-          //     //                   ),
-          //     //                 ],
-          //     //               ),
-          //     //             ),
-          //     //           ),
-          //     //         ),
-          //     //         //Bus Registration BTN Starts Here
-          //     //         //Policies BTN Starts Here
-          //     //         InkWell(
-          //     //           onTap: () {
-          //     //             //Navigator.pushNamed(context, Policies.routeName);
-          //     //           },
-          //     //           child: Padding(
-          //     //             padding: const EdgeInsets.all(8.0),
-          //     //             child: Container(
-          //     //               width: 100.w,
-          //     //               height: 100.h,
-          //     //               decoration: BoxDecoration(
-          //     //                 shape: BoxShape.rectangle,
-          //     //                 color: Colors.green.withOpacity(0.5),
-          //     //                 borderRadius: BorderRadius.all(Radius.circular(25)),
-          //     //               ),
-          //     //               child: Column(
-          //     //                 mainAxisAlignment: MainAxisAlignment.center,
-          //     //                 children: [
-          //     //                   Container(
-          //     //                     width: 50.w,
-          //     //                     height: 50.h,
-          //     //                     decoration: BoxDecoration(
-          //     //                       shape: BoxShape.circle,
-          //     //                       color: Colors.green,
-          //     //                     ),
-          //     //                     child: Icon(Icons.policy_outlined,
-          //     //                       size:35.sp,
-          //     //                     ),
-          //     //                   ),
-          //     //                   Text(
-          //     //                     StringsManager.policies.tr(),
-          //     //                     style: TextStyle(
-          //     //                       fontSize: 13.sp,
-          //     //                       fontWeight: FontWeight.bold,
-          //     //                       color: Theme.of(context).colorScheme.textMainBlack,
-          //     //                       fontFamily: 'Roboto',
-          //     //                     ),
-          //     //                   ),
-          //     //                 ],
-          //     //               ),
-          //     //             ),
-          //     //           ),
-          //     //         ),
-          //     //         //Policies BTN Ends Here
-          //     //       ],
-          //     //     ),
-          //     //     Row(
-          //     //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //     //       children: [
-          //     //         //About Us BTN Starts Here
-          //     //         InkWell(
-          //     //           onTap: () {
-          //     //            // Navigator.pushNamed(context, AboutUs.routeName);
-          //     //           },
-          //     //           child: Padding(
-          //     //             padding: const EdgeInsets.all(8.0),
-          //     //             child: Container(
-          //     //               width: 100.w,
-          //     //               height: 100.h,
-          //     //               decoration: BoxDecoration(
-          //     //                 shape: BoxShape.rectangle,
-          //     //                 color: Colors.teal.withOpacity(0.5),
-          //     //                 borderRadius: BorderRadius.all(Radius.circular(25)),
-          //     //               ),
-          //     //               child: Column(
-          //     //                 mainAxisAlignment: MainAxisAlignment.center,
-          //     //                 children: [
-          //     //                   Container(
-          //     //                     width: 50.w,
-          //     //                     height: 50.h,
-          //     //                     decoration: BoxDecoration(
-          //     //                       shape: BoxShape.circle,
-          //     //                       color: Colors.teal,
-          //     //                     ),
-          //     //                     child: Icon(Icons.account_balance_outlined,
-          //     //                       size:35.sp,
-          //     //                     ),
-          //     //                   ),
-          //     //                   Text(
-          //     //                     StringsManager.aboutUs.tr(),
-          //     //                     style: TextStyle(
-          //     //                       fontSize: 13.sp,
-          //     //                       fontWeight: FontWeight.bold,
-          //     //                       color: Theme.of(context).colorScheme.textMainBlack,
-          //     //                       fontFamily: 'Roboto',
-          //     //                     ),
-          //     //                   ),
-          //     //                 ],
-          //     //               ),
-          //     //             ),
-          //     //           ),
-          //     //         ),
-          //     //         //About Us BTN Ends Here
-          //     //
-          //     //         //Old Settings BTN Starts Here
-          //     //         // Padding(
-          //     //         //   padding: const EdgeInsets.all(8.0),
-          //     //         //   child: Container(
-          //     //         //     width: 100.w,
-          //     //         //     height: 100.h,
-          //     //         //     decoration: BoxDecoration(
-          //     //         //       shape: BoxShape.rectangle,
-          //     //         //       color: Colors.blue.withOpacity(0.5),
-          //     //         //       borderRadius: BorderRadius.all(Radius.circular(25)),
-          //     //         //     ),
-          //     //         //     child: Column(
-          //     //         //       mainAxisAlignment: MainAxisAlignment.center,
-          //     //         //       children: [
-          //     //         //         Container(
-          //     //         //           width: 50.w,
-          //     //         //           height: 50.h,
-          //     //         //           decoration: BoxDecoration(
-          //     //         //             shape: BoxShape.circle,
-          //     //         //             color: Colors.blue,
-          //     //         //           ),
-          //     //         //           child: Icon(Icons.settings,
-          //     //         //             size:35.sp,
-          //     //         //           ),
-          //     //         //         ),
-          //     //         //         Text(
-          //     //         //           StringsManager.settings.tr(),
-          //     //         //           style: TextStyle(
-          //     //         //             fontSize: 13.sp,
-          //     //         //             fontWeight: FontWeight.bold,
-          //     //         //             color: Theme.of(context).colorScheme.textMainBlack,
-          //     //         //             fontFamily: 'Roboto',
-          //     //         //           ),
-          //     //         //         ),
-          //     //         //       ],
-          //     //         //     ),
-          //     //         //   ),
-          //     //         // ),
-          //     //         //Old Settings BTN Ends Here
-          //     //         //placeHolder Starts Here
-          //     //         Padding(
-          //     //           padding: const EdgeInsets.all(8.0),
-          //     //           child: Container(
-          //     //             width: 100.w,
-          //     //             height: 100.h,
-          //     //             decoration: BoxDecoration(
-          //     //               shape: BoxShape.rectangle,
-          //     //               color: Colors.transparent,
-          //     //               borderRadius: BorderRadius.all(Radius.circular(25)),
-          //     //             ),
-          //     //             child: Column(
-          //     //               mainAxisAlignment: MainAxisAlignment.center,
-          //     //               children: [
-          //     //                 Container(
-          //     //                   width: 50.w,
-          //     //                   height: 50.h,
-          //     //                   decoration: BoxDecoration(
-          //     //                     shape: BoxShape.circle,
-          //     //                     color: Colors.transparent,
-          //     //                   ),
-          //     //                 ),
-          //     //                 Text(
-          //     //                   "",
-          //     //                   style: TextStyle(
-          //     //                     fontSize: 13.sp,
-          //     //                     fontWeight: FontWeight.bold,
-          //     //                     color: Theme.of(context).colorScheme.textMainBlack,
-          //     //                     fontFamily: 'Roboto',
-          //     //                   ),
-          //     //                 ),
-          //     //               ],
-          //     //             ),
-          //     //           ),
-          //     //         ),
-          //     //         //PlaceHolder Ends Here
-          //     //       ],
-          //     //     ),
-          //     //   ],
-          //     // ),
-          //   ],
-          // ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  /// Build Each Drawer Item
-  Widget _buildItem(_NavigationItem data, NavDrawerState state  ) =>
-      _makeListItem(data, state);
+  // ======================================================
+  // HEADER – joyful gradient with small entrance animation
+  // ======================================================
+  Widget _buildHeader(
+      BuildContext context, {
+        required Color primaryBlue,
+        required Color secondaryBlue,
+        required Color accentSky,
+      }) {
+    return SizedBox(
+      height: 170.h,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0.9, end: 1.0),
+        duration: const Duration(milliseconds: 320),
+        curve: Curves.easeOutBack,
+        builder: (context, value, child) {
+          return Transform.scale(
+            scale: value,
+            alignment: Alignment.bottomLeft,
+            child: child,
+          );
+        },
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                primaryBlue,
+                secondaryBlue,
+                accentSky,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(24.r),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: primaryBlue.withOpacity(0.35),
+                blurRadius: 18,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          padding: EdgeInsets.only(
+            left: 18.w,
+            right: 18.w,
+            top: 32.h,
+            bottom: 18.h,
+          ),
+          child: Row(
+            children: [
+              // playful avatar “balloon”
+              Container(
+                width: 56.w,
+                height: 56.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: SweepGradient(
+                    colors: [
+                      ColorsManager.accentSun,
+                      ColorsManager.accentMint,
+                      ColorsManager.accentSky,
+                      primaryBlue,
+                      ColorsManager.accentSun,
+                    ],
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(3.w),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white.withOpacity(0.95),
+                    child: Text(
+                      'Hi',
+                      style: TextStyle(
+                        color: primaryBlue,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 16.sp,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 12.w),
+              // greeting + subtitle
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hello!',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      'Welcome to Oasis Athletics',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.86),
+                        fontSize: 13.sp,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
+  // ======================================================
+  // ITEM CARD (IMAGE-BASED) – joyful, animated cards
+  // ======================================================
+  Widget _drawerItemCard(
+      _NavigationItem data,
+      NavDrawerState state,
+      BuildContext context, {
+        required int index,
+        required Color primaryBlue,
+        required Color accentMint,
+        required Color accentSun,
+        required Color accentPurple,
+      }) {
+    final bool isSelected = state.selectedItem == data.item;
 
-  /// Each Drawer Item (Image from assets on top, text below)
-  Widget _makeListItem(_NavigationItem data, NavDrawerState state) => Card(
+    final Color baseBg = Colors.white.withOpacity(0.92);
+    final Color selectedBorder = primaryBlue;
+    final Color unselectedBorder = Colors.black12.withOpacity(0.2);
 
-    elevation: 2,
-    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(30), // Match your image corner radius here
-    ),
-    clipBehavior: Clip.antiAlias, // This is the key to clip child (image) to match the card shape
-    child: Image.asset(
-      data.imagePath,
-      fit: BoxFit.cover,
-      width: double.infinity,
-      height: double.infinity,
-    ),
-    // elevation: 2,
-    // margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-    // child:
-    //   Image.asset(
-    //   fit: BoxFit.cover,
-    //     //width: double.infinity,
-    //   data.imagePath,)
+    final Color glow = isSelected ? accentMint : Colors.transparent;
 
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.96, end: 1.0),
+      duration: Duration(milliseconds: 220 + index * 40),
+      curve: Curves.easeOutBack,
+      builder: (context, value, child) {
+        // easeOutBack can overshoot > 1, so clamp for opacity
+        final double opacity = value.clamp(0.0, 1.0);
+        return Opacity(
+          opacity: opacity,
+          child: Transform.translate(
+            offset: Offset(0, (1 - opacity) * 10),
+            child: child,
+          ),
+        );
+      },
+      child: Card(
+        elevation: isSelected ? 6 : 2,
+        margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        shadowColor: glow.withOpacity(0.35),
+        clipBehavior: Clip.antiAlias,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOut,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            gradient: isSelected
+                ? LinearGradient(
+              colors: [
+                baseBg,
+                accentMint.withOpacity(0.16),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            )
+                : null,
+            color: isSelected ? null : baseBg,
+            border: Border.all(
+              color: isSelected ? selectedBorder : unselectedBorder,
+              width: isSelected ? 1.8 : 1.0,
+            ),
+          ),
+          child: InkWell(
+            onTap: () => _handleItemClick(context, data.item),
+            borderRadius: BorderRadius.circular(20),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Center(
+                child: Hero(
+                  tag: data.imagePath,
+                  child: ColorFiltered(
+                    colorFilter: isSelected
+                        ? ColorFilter.mode(
+                      accentSun.withOpacity(0.10),
+                      BlendMode.srcATop,
+                    )
+                        : const ColorFilter.mode(
+                      Colors.transparent,
+                      BlendMode.srcATop,
+                    ),
+                    child: Image.asset(
+                      data.imagePath,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-      // Column(
-      //   //mainAxisSize: MainAxisSize.min,
-      //   children: [
-      //     Image.asset(
-      //       data.imagePath,
-      //      // fit: BoxFit.fitWidth,
-      //       //width: 40,
-      //       //height: 40,
-      //       // color: data.item == state.selectedItem
-      //       //     ? const Color.fromARGB(255, 112, 119, 249)
-      //       //     : Colors.grey[600],
-      //     ),
-      //     //const SizedBox(height: 8),
-      //     // Text(
-      //     //   data.title,
-      //     //   textAlign: TextAlign.center,
-      //     //   style: TextStyle(
-      //     //     fontWeight: data.item == state.selectedItem
-      //     //         ? FontWeight.bold
-      //     //         : FontWeight.w400,
-      //     //     color: data.item == state.selectedItem
-      //     //         ? const Color.fromARGB(255, 112, 119, 249)
-      //     //         : Colors.grey[800],
-      //     //   ),
-      //     // ),
-      //   ],
-      // ),
-
-  );
-  /// Each Drawer Item
-  // Widget _makeListItem(_NavigationItem data, NavDrawerState state) => Card(
-  //   color: Colors.grey[100],
-  //   shape: const ContinuousRectangleBorder(
-  //     borderRadius: BorderRadius.zero,
-  //   ),
-  //   borderOnForeground: true,
-  //   elevation: 0,
-  //   margin: EdgeInsets.zero,
-  //   child: Builder(
-  //     builder: (BuildContext context) => ListTile(
-  //       title: Text(
-  //         data.title,
-  //         style: TextStyle(
-  //           fontWeight: data.item == state.selectedItem
-  //               ? FontWeight.bold
-  //               : FontWeight.w300,
-  //           color: data.item == state.selectedItem
-  //               ? const Color.fromARGB(255, 112, 119, 249)
-  //               : Colors.grey[600],
-  //         ),
-  //       ),
-  //       leading: Icon(
-  //         data.icon,
-  //         color: data.item == state.selectedItem
-  //             ? const Color.fromARGB(255, 112, 119, 249)
-  //             : Colors.grey[600],
-  //       ),
-  //       onTap: () => _handleItemClick(context, data.item),
-  //     ),
-  //   ),
-  // );
-
-  /// Tap OnEach item Handler
   void _handleItemClick(BuildContext context, NavItem item) {
     BlocProvider.of<NavDrawerBloc>(context).add(NavigateTo(item));
     Navigator.pop(context);
   }
-
 }
